@@ -12,6 +12,7 @@ import WatchConnectivity
 public class WCSessionWrapper: NSObject, IConnectivityService {
     var session: WCSession?
     var onReceiveHandler: (ISyncItem) -> () = {_ in }
+    var onReachabilityChangeHandler:() -> () = {}
     public var parser: IApplicationContextParser!
     
     public func run() {
@@ -70,5 +71,9 @@ extension WCSessionWrapper: WCSessionDelegate {
         if let item = parser.decodeItemFrom(applicationContext) {
             onReceiveHandler(item)
         }
+    }
+    
+    public func sessionReachabilityDidChange(_ session: WCSession) {
+        onReachabilityChangeHandler()
     }
 }
