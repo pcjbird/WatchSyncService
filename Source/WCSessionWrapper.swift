@@ -56,6 +56,11 @@ public class WCSessionWrapper: NSObject, IConnectivityService {
             }
         }
     }
+    
+    public func onReachabilityChanged(handler: @escaping () -> ()) {
+        onReachabilityChangeHandler = handler
+        onReachabilityChangeHandler()
+    }
 }
 
 extension WCSessionWrapper: WCSessionDelegate {
