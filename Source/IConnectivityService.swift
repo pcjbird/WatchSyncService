@@ -13,4 +13,5 @@ public protocol IConnectivityService {
     func send(item: ISyncItem)
     func onReceive(handler: @escaping (ISyncItem) -> ())
     func onReachabilityChanged(handler: @escaping () -> ())
+    func onCompanionAppInstalledChanged(handler: @escaping () -> ())
 }

@@ -13,6 +13,7 @@ public class WCSessionWrapperUsingMessage: NSObject, IConnectivityService {
     var session: WCSession?
     var onReceiveHandler: (ISyncItem) -> () = {_ in }
     var onReachabilityChangeHandler:() -> () = {}
+    var onCompanionAppInstalledChangeHandler:() -> () = {}
     public var parser: IApplicationContextParser!
     
     public func run() {
@@ -49,10 +50,20 @@ public class WCSessionWrapperUsingMessage: NSObject, IConnectivityService {
     public func onReachabilityChanged(handler: @escaping () -> ()) {
         onReachabilityChangeHandler = handler
     }
+    
+    public func onCompanionAppInstalledChanged(handler: @escaping () -> ()) {
+        onCompanionAppInstalledChangeHandler = handler
+    }
 }
 
 extension WCSessionWrapperUsingMessage: WCSessionDelegate {
-    public func session(_ session: WCSession, activationDidCompleteWith activationState: WCSessionActivationState, error: Error?) {}
+    public func session(_ session: WCSession, activationDidCompleteWith activationState: WCSessionActivationState, error: Error?) {
+        var errorMessage = ""
+        if let error = error {
+            errorMessage = ", error:\(error)"
+        }
+        print(self, #function, #line, "session activation did complete with state: \(activationState)\(errorMessage)")
+    }
     
     #if os(iOS)
     public func sessionDidBecomeInactive(_ session: WCSession) {}
@@ -71,7 +82,13 @@ extension WCSessionWrapperUsingMessage: WCSessionDelegate {
         }
     }
     
+    public func sessionCompanionAppInstalledDidChange(_ session: WCSession) {
+        print(self, #function, #line, "sessionCompanionAppInstalledDidChange: \(session.isCompanionAppInstalled)")
+        onCompanionAppInstalledChangeHandler()
+    }
+    
     public func sessionReachabilityDidChange(_ session: WCSession) {
+        print(self, #function, #line, "sessionReachabilityDidChange: \(session.isReachable)")
         onReachabilityChangeHandler()
     }
 }

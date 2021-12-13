@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
     s.name        = "WatchSyncService"
-    s.version     = "1.0.2"
+    s.version     = "1.0.3-beta.1"
     s.summary     = "WatchSyncService"
     s.homepage    = "https://github.com/AntonBelousov/WatchSyncService"
     s.license     = { :type => "MIT" }
@@ -11,6 +11,6 @@ Pod::Spec.new do |s|
     s.watchos.deployment_target = "4.0"
     s.swift_version = '4.0'
 
-    s.source   = { :git => "https://github.com/AntonBelousov/WatchSyncService.git", :tag => s.version }
+    s.source   = { :git => "https://github.com/pcjbird/WatchSyncService.git", :tag => s.version }
     s.source_files = "Source/*.swift"
 end

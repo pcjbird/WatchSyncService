@@ -15,6 +15,8 @@ public class GenericSyncService: NSObject {
     private var handlers = [ISyncItemType: ISyncItemHandler]()
     
     private var reachabilityChangedHandler: (() -> ())?
+    
+    private var companionAppInstalledChangedHandler: (() -> ())?
 
     public func runWith(connectivityService: IConnectivityService) {
         self.connectivityService = connectivityService
@@ -31,6 +33,12 @@ public class GenericSyncService: NSObject {
             }
         })
         
+        connectivityService.onCompanionAppInstalledChanged {
+            if let handler = self.companionAppInstalledChangedHandler {
+                handler()
+            }
+        }
+        
         connectivityService.run()
     }
     
@@ -44,5 +52,9 @@ public class GenericSyncService: NSObject {
     
     public func onReachabilityChanged(handlerBlock: @escaping () -> ()) {
         self.reachabilityChangedHandler = handlerBlock
+    }
+    
+    public func onCompanionAppInstalledChanged(handlerBlock: @escaping () -> ()) {
+        self.companionAppInstalledChangedHandler = handlerBlock
     }
 }

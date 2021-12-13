@@ -13,6 +13,7 @@ public class WCSessionWrapper: NSObject, IConnectivityService {
     var session: WCSession?
     var onReceiveHandler: (ISyncItem) -> () = {_ in }
     var onReachabilityChangeHandler:() -> () = {}
+    var onCompanionAppInstalledChangeHandler:() -> () = {}
     public var parser: IApplicationContextParser!
     
     public func run() {
@@ -58,13 +59,22 @@ public class WCSessionWrapper: NSObject, IConnectivityService {
     }
     
     public func onReachabilityChanged(handler: @escaping () -> ()) {
-        onReachabilityChangeHandler = handler
-        onReachabilityChangeHandler()
+        self.onReachabilityChangeHandler = handler
+    }
+    
+    public func onCompanionAppInstalledChanged(handler: @escaping () -> ()) {
+        self.onCompanionAppInstalledChangeHandler = handler
     }
 }
 
 extension WCSessionWrapper: WCSessionDelegate {
-    public func session(_ session: WCSession, activationDidCompleteWith activationState: WCSessionActivationState, error: Error?) {}
+    public func session(_ session: WCSession, activationDidCompleteWith activationState: WCSessionActivationState, error: Error?) {
+        var errorMessage = ""
+        if let error = error {
+            errorMessage = ", error:\(error)"
+        }
+        print(self, #function, #line, "session activation did complete with state: \(activationState)\(errorMessage)")
+    }
     
     #if os(iOS)
     public func sessionDidBecomeInactive(_ session: WCSession) {}
@@ -78,7 +88,13 @@ extension WCSessionWrapper: WCSessionDelegate {
         }
     }
     
+    public func sessionCompanionAppInstalledDidChange(_ session: WCSession) {
+        print(self, #function, #line, "sessionCompanionAppInstalledDidChange: \(session.isCompanionAppInstalled)")
+        self.onCompanionAppInstalledChangeHandler()
+    }
+    
     public func sessionReachabilityDidChange(_ session: WCSession) {
-        onReachabilityChangeHandler()
+        print(self, #function, #line, "sessionReachabilityDidChange: \(session.isReachable)")
+        self.onReachabilityChangeHandler()
     }
 }
