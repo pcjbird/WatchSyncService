@@ -16,7 +16,6 @@ public class GenericSyncService: NSObject {
     
     private var reachabilityChangedHandler: (() -> ())?
     
-    private var companionAppInstalledChangedHandler: (() -> ())?
 
     public func runWith(connectivityService: IConnectivityService) {
         self.connectivityService = connectivityService

@@ -13,7 +13,6 @@ public class WCSessionWrapper: NSObject, IConnectivityService {
     var session: WCSession?
     var onReceiveHandler: (ISyncItem) -> () = {_ in }
     var onReachabilityChangeHandler:() -> () = {}
-    var onCompanionAppInstalledChangeHandler:() -> () = {}
     public var parser: IApplicationContextParser!
     
     public func run() {
@@ -59,7 +58,7 @@ public class WCSessionWrapper: NSObject, IConnectivityService {
     }
     
     public func onReachabilityChanged(handler: @escaping () -> ()) {
-        self.onReachabilityChangeHandler = handler
+        onReachabilityChangeHandler = handler
     }
 }
 
@@ -86,6 +85,6 @@ extension WCSessionWrapper: WCSessionDelegate {
     
     public func sessionReachabilityDidChange(_ session: WCSession) {
         print(self, #function, #line, "sessionReachabilityDidChange: \(session.isReachable)")
-        self.onReachabilityChangeHandler()
+        onReachabilityChangeHandler()
     }
 }
