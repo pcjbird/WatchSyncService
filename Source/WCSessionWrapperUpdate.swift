@@ -82,6 +82,7 @@ extension WCSessionWrapperUsingMessage: WCSessionDelegate {
         }
     }
     
+    @available(watchOSApplicationExtension 6.0, *)
     public func sessionCompanionAppInstalledDidChange(_ session: WCSession) {
         print(self, #function, #line, "sessionCompanionAppInstalledDidChange: \(session.isCompanionAppInstalled)")
         onCompanionAppInstalledChangeHandler()
