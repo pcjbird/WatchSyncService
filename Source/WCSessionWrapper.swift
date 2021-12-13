@@ -61,10 +61,6 @@ public class WCSessionWrapper: NSObject, IConnectivityService {
     public func onReachabilityChanged(handler: @escaping () -> ()) {
         self.onReachabilityChangeHandler = handler
     }
-    
-    public func onCompanionAppInstalledChanged(handler: @escaping () -> ()) {
-        self.onCompanionAppInstalledChangeHandler = handler
-    }
 }
 
 extension WCSessionWrapper: WCSessionDelegate {
@@ -86,12 +82,6 @@ extension WCSessionWrapper: WCSessionDelegate {
         if let item = parser.decodeItemFrom(applicationContext) {
             onReceiveHandler(item)
         }
-    }
-    
-    @available(watchOSApplicationExtension 6.0, *)
-    public func sessionCompanionAppInstalledDidChange(_ session: WCSession) {
-        print(self, #function, #line, "sessionCompanionAppInstalledDidChange: \(session.isCompanionAppInstalled)")
-        self.onCompanionAppInstalledChangeHandler()
     }
     
     public func sessionReachabilityDidChange(_ session: WCSession) {
